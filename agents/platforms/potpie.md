@@ -121,13 +121,14 @@ Potpie is an AI-powered developer platform designed to understand and interact w
 ## Architecture Design
 
 ```mermaid
+```mermaid
 graph TD
-    User[User (Web UI/VSCode/API)] -->|Requests| API[FastAPI Service]
+    User[User - Web UI/VSCode/API] -->|Requests| API[FastAPI Service]
 
     subgraph API
         Router[API Router]
         Auth[Auth Service]
-        Controllers[Controllers (Parsing, Conversation, Project, CustomAgent)]
+        Controllers[Controllers - Parsing, Conversation, Project, CustomAgent]
     end
 
     Controllers -->|Invoke| Services[Core Services]
@@ -144,20 +145,20 @@ graph TD
     end
 
     Controllers -->|Dispatch Parse Task| CeleryQueue[Celery Task Queue]
-    CeleryQueue -->|Assign Task| CeleryWorker[Celery Worker (ParsingService)]
+    CeleryQueue -->|Assign Task| CeleryWorker[Celery Worker - ParsingService]
 
     CeleryWorker -->|Access Code| CodeProvider[Code Provider Service]
     CodeProvider -->|GitHub/Local| GitRepos[Git Repositories]
-    CeleryWorker -->|Build Graph| GraphBuilder[Graph Builder (CodeGraphService/blar_graph)]
+    CeleryWorker -->|Build Graph| GraphBuilder[Graph Builder - CodeGraphService/blar_graph]
     GraphBuilder -->|Store/Update| Neo4j[Neo4j Knowledge Graph]
-    CeleryWorker -->|Enrich Graph| InferenceSvc[Inference Service (Embeddings/Docstrings)]
+    CeleryWorker -->|Enrich Graph| InferenceSvc[Inference Service - Embeddings/Docstrings]
     InferenceSvc --> LLMSvc
     InferenceSvc --> Neo4j
     CeleryWorker -->|Index Data| SearchSvc
 
     ConversationSvc --> Supervisor[Supervisor Agent]
     Supervisor -->|Route Query| SystemAgents[System Agents]
-    Supervisor -->|Route Query| CustomAgentRuntime[Custom Agent Runtime (CrewAI/PydanticAI)]
+    Supervisor -->|Route Query| CustomAgentRuntime[Custom Agent Runtime - CrewAI/PydanticAI]
 
     SystemAgents --> LLMSvc
     SystemAgents --> ToolSvc
@@ -168,7 +169,7 @@ graph TD
     CustomAgentRuntime --> HistorySvc
 
     ToolSvc --> KGTools[KG & Code Tools]
-    ToolSvc --> ExtSVCIntegrations[External Service Tools (GitHub, Web, Linear)]
+    ToolSvc --> ExtSVCIntegrations[External Service Tools - GitHub, Web, Linear]
     ToolSvc --> ThinkTool[Think Tool]
 
     KGTools --> Neo4j
@@ -177,12 +178,12 @@ graph TD
     ExtSVCIntegrations --> GitHubAPI[GitHub API]
     ExtSVCIntegrations --> Firecrawl[Firecrawl API]
     ExtSVCIntegrations --> LinearAPI[Linear API]
-    ExtSVCIntegrations --> LLMSvcPxy[LLM Provider (for Web Search)]
+    ExtSVCIntegrations --> LLMSvcPxy[LLM Provider - for Web Search]
     ThinkTool --> LLMSvc
 
     LLMSvc --> LiteLLM[LiteLLM Gateway]
     LLMSvcPxy --> LiteLLM
-    LiteLLM -->|Access| LLMs[External LLMs (OpenAI, Anthropic, etc.)]
+    LiteLLM -->|Access| LLMs[External LLMs - OpenAI, Anthropic, etc.]
 
     Auth --> Postgres[PostgreSQL DB]
     ProjectSvc --> Postgres
