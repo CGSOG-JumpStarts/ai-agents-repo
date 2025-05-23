@@ -106,9 +106,9 @@ VisionAgent is an AI-powered system designed to assist users in solving computer
 
 ```mermaid
 graph TD
-    UserInterface[User Interface (Web App / CLI)] -->|User Prompt, Media| VisionAgentV2[VisionAgentV2 Orchestrator]
+    UserInterface[User Interface - Web App / CLI] -->|User Prompt, Media| VisionAgentV2[VisionAgentV2 Orchestrator]
 
-    subgraph VisionAgentV2 Orchestrator
+    subgraph VisionAgentV2_Orchestrator[VisionAgentV2 Orchestrator]
         direction LR
         Planner[VisionAgentPlannerV2]
         Coder[VisionAgentCoderV2]
@@ -116,25 +116,25 @@ graph TD
 
     VisionAgentV2 -- "1. Plan Task" --> Planner
     Planner -- "2. Generate Plan" --> PlannerLMM[Planner LMM Engine]
-    PlannerLMM -- "Uses" --> PlanningTools[Planning Helper Tools (VQA, Suggestion, Tool Selector)]
+    PlannerLMM -- "Uses" --> PlanningTools[Planning Helper Tools - VQA, Suggestion, Tool Selector]
     PlanningTools -- "Accesses" --> VisionToolDocs[Vision Tools Docstrings & Knowledge]
-    PlanningTools -- "Human-in-the-Loop (Optional)" --> UserInterface
+    PlanningTools -- "Human-in-the-Loop - Optional" --> UserInterface
     Planner --> |"Returns Plan"| VisionAgentV2
 
     VisionAgentV2 -- "3. Code Generation Task + Plan" --> Coder
     Coder -- "4. Generate Code & Tests" --> CoderLMMs[Coder, Tester, Debugger LMMs]
-    CoderLMMs -- "Writes code that uses" --> VisionToolsLib[Vision Tools Library (tools.py)]
-    CoderLMMs -- "Code & Tests" --> CodeExecutionEnv[Code Execution Environment (CodeInterpreter)]
+    CoderLMMs -- "Writes code that uses" --> VisionToolsLib[Vision Tools Library - tools.py]
+    CoderLMMs -- "Code & Tests" --> CodeExecutionEnv[Code Execution Environment - CodeInterpreter]
     CodeExecutionEnv -- "Executes & Gets Results/Errors" --> CoderLMMs
     Coder --> |"Returns Final Code & Output"| VisionAgentV2
 
     VisionAgentV2 -- "5. Display Results" --> UserInterface
 
     %% External Services and Dependencies
-    PlannerLMM --> LLM_APIs[LLM Provider APIs (Anthropic, Google, OpenAI, etc.)]
+    PlannerLMM --> LLM_APIs[LLM Provider APIs - Anthropic, Google, OpenAI, etc.]
     CoderLMMs --> LLM_APIs
-    PlanningTools -- "Uses (for VQA, Suggestion, Tool Choice)" --> LLM_APIs
-    VisionToolsLib -- "Calls for CV tasks" --> CV_Backends[CV Model Backends (LandingAI API, other specific model APIs)]
+    PlanningTools -- "Uses for VQA, Suggestion, Tool Choice" --> LLM_APIs
+    VisionToolsLib -- "Calls for CV tasks" --> CV_Backends[CV Model Backends - LandingAI API, other specific model APIs]
 
     classDef agent fill:#DDA0DD,stroke:#333,stroke-width:2px;
     classDef module fill:#ADD8E6,stroke:#333,stroke-width:2px;
