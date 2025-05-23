@@ -104,7 +104,7 @@ graph TD
     LLMGenTool -->|Parsed Scenarios| ScenarioGen
     ScenarioGen -->|Scenarios List| RTOrchestrator
 
-    RTOrchestrator -- If no examples -->|Agent Desc, Category, Scenario, Input Format| TestCaseGen
+    RTOrchestrator -->|Agent Desc, Category, Scenario, Input Format| TestCaseGen
     TestCaseGen -->|Prompts| LLMGenTool
     LLMGenTool -->|API Call| LLMAPIs
     LLMAPIs -->|Generated Test Cases JSON| LLMGenTool
