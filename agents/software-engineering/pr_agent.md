@@ -25,7 +25,6 @@ PR-Agent is a framework composed of an orchestrator and several specialized tool
 -   **Help Tool (`PRHelpMessage` class):** Provides a list of available tools and their descriptions.
 -   **Config Tool (`PRConfig` class):** Displays the current PR-Agent configuration settings.
 
-(💎 - Indicates a feature primarily available or enhanced in Qodo Merge, the hosted version)
 
 ## Agent / Workflow Description
 
