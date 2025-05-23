@@ -393,16 +393,16 @@ This framework provides tools for generating synthetic data, such as question-an
 
 ```mermaid
 graph TD
-    UserRequest[User Request] -->|Input (Text/File), Config (Type, N, Model)| SDG[SyntheticDataGeneration Class]
+    UserRequest[User Request] -->|Input - Text/File, Config - Type, N, Model| SDG[SyntheticDataGeneration Class]
 
     subgraph SDG_InternalWorkflow["SDG Internal Workflow"]
         direction LR
-        SDG_Orchestrator["SDG Orchestrator Methods\n(generate_qna, generate_examples, etc.)"]
-        DocParser["process_document()"]
-        PromptBuilder["Prompt Construction\n(_get_system_message, _get_init_ex_gen_prompt, etc.)"]
-        LLMInterface["LLM Call Interface\n(_generate_llm_response, _generate_internal_response)"]
-        ResponseParser["Response Parsing & Formatting\n(_parse_response, DataFrame creation)"]
-        FeedbackLoop["Interactive Feedback Loop (for generate_examples)"]
+        SDG_Orchestrator["SDG Orchestrator Methods\n- generate_qna, generate_examples, etc."]
+        DocParser["process_document"]
+        PromptBuilder["Prompt Construction\n- get_system_message, get_init_ex_gen_prompt, etc."]
+        LLMInterface["LLM Call Interface\n- generate_llm_response, generate_internal_response"]
+        ResponseParser["Response Parsing & Formatting\n- parse_response, DataFrame creation"]
+        FeedbackLoop["Interactive Feedback Loop - for generate_examples"]
     end
 
     subgraph LLM_Access_Layer["LLM Access Layer"]
@@ -417,14 +417,14 @@ graph TD
         Gemini_API["Google Gemini API"]
         Azure_OpenAI_API["Azure OpenAI API"]
         OtherLiteLLMLinkedAPIs["Other LiteLLM-Supported APIs"]
-        InternalLLMService["Internal LLM Service (Optional)"]
+        InternalLLMService["Internal LLM Service - Optional"]
     end
     
     subgraph SupportingLibraries["Supporting Libraries"]
         PandasLib["pandas"]
         TiktokenLib["tiktoken"]
         PyPDFLib["pypdf"]
-        MarkdownLib["markdown (Python library)"]
+        MarkdownLib["markdown - Python library"]
     end
 
     SDG_Orchestrator -- Uses --> DocParser
@@ -447,11 +447,13 @@ graph TD
     LiteLLM -- Routes to --> OtherLiteLLMLinkedAPIs
     
     InternalProxyCall -- Calls --> InternalLLMService
-    CustomProxyCall -- Calls --> Gemini_API # Or other specified proxy endpoint
+    %% CustomProxyCall calls Gemini_API or other specified proxy endpoint
+    CustomProxyCall -- Calls --> Gemini_API
 
     OpenAI_API -->|LLM Response| LiteLLM
     Groq_API -->|LLM Response| LiteLLM
-    Gemini_API -->|LLM Response| LiteLLM # or CustomProxyCall
+    %% Gemini_API responds to LiteLLM or CustomProxyCall
+    Gemini_API -->|LLM Response| LiteLLM
     Azure_OpenAI_API -->|LLM Response| LiteLLM
     OtherLiteLLMLinkedAPIs -->|LLM Response| LiteLLM
     InternalLLMService -->|LLM Response| InternalProxyCall
@@ -460,13 +462,14 @@ graph TD
     InternalProxyCall -->|Raw LLM Response| LLMInterface
     CustomProxyCall -->|Raw LLM Response| LLMInterface
 
-    LLMInterface -->|Parsed Response (String/JSON)| ResponseParser
+    LLMInterface -->|Parsed Response - String/JSON| ResponseParser
     ResponseParser -- Uses --> PandasLib
-    ResponseParser -->|Structured Data (e.g., DataFrame)| SDG_Orchestrator
+    ResponseParser -->|Structured Data - e.g. DataFrame| SDG_Orchestrator
     
-    SDG_Orchestrator -- generate_examples() uses --> FeedbackLoop
-    FeedbackLoop -- User Input via console --> SDG_Orchestrator # For interactive refinement
+    SDG_Orchestrator -- generate_examples uses --> FeedbackLoop
+    %% User Input via console for interactive refinement
+    FeedbackLoop -- User Input via console --> SDG_Orchestrator
 
     SDG_Orchestrator -- Input Validation uses --> TiktokenLib
-    SDG_Orchestrator -->|Final Output (DataFrame/List/CSV)| UserOutput["User Output"]
+    SDG_Orchestrator -->|Final Output - DataFrame/List/CSV| UserOutput["User Output"]
 ```
