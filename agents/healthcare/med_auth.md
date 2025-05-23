@@ -78,45 +78,74 @@ This entire process is designed to rigorously test and validate AI-driven prior 
 
 ```mermaid
 graph TD
-    A["Test Case Data YAML \n • Patient Info \n • Physician Info \n • Clinical Info \n • Policy Text \n • Ground Truth Determination"] --> B{AutoDeterminationEvaluator};
+    A["Test Case Data (YAML)<br/>📄 Patient Info<br/>👨‍⚕️ Physician Info<br/>🏥 Clinical Info<br/>📋 Policy Text<br/>✅ Ground Truth Determination"] --> B{AutoDeterminationEvaluator}
     
-    subgraph B["AutoDeterminationEvaluator Pipeline"]
-        direction LR
-        B1_PreProcess["1. Preprocess & Run Determination \n For each test case"] -- Invokes --> B2_AutoPAD["AutoPADeterminator Agent"];
-        B2_AutoPAD -- Generates Determination --> B1_PreProcess;
-        B1_PreProcess -- Formatted Data Generated & Ground Truth --> B3_RunEval["2. Run Azure AI Evaluation"];
-        B3_RunEval -- Metrics --> B4_PostProcess["3. Postprocess Results"];
-    end
-    
-    subgraph B2_AutoPAD_Internals["AutoPADeterminator Agent Logic"]
+    subgraph AutoPAD ["🤖 AutoDeterminationEvaluator Pipeline"]
         direction TB
-        B2_1_Input["Input: Case Data + Policy Text"] --> B2_2_PolicySum["Policy Summarization \n LLM Call via AzureOpenAIManager \n if policy is too long"];
-        B2_2_PolicySum --> B2_3_PromptEng["Prompt Engineering \n Jinja: prior_auth_user_prompt, prior_auth_system_prompt"];
-        B2_1_Input --> B2_3_PromptEng;
-        B2_3_PromptEng --> B2_4_LLMCall["LLM Call for PA Determination \n AzureOpenAIManager with GPT-4o/O1"];
-        B2_4_LLMCall --> B2_5_RawOutput["Raw LLM Determination Text"];
-        B2_5_RawOutput --> B2_6_OutputStructuring["Determination Structuring \n LLM Call via AzureOpenAIManager with summarize_autodetermination prompts"]
-        B2_6_OutputStructuring --> B2_7_FinalDetermination["Final Structured Determination JSON-like String"]
+        B1["1️⃣ Preprocess & Run Determination<br/>(For each test case)"] 
+        B2["AutoPADeterminator Agent"]
+        B3["2️⃣ Run Azure AI Evaluation"]
+        B4["3️⃣ Postprocess Results"]
+        
+        B1 -.->|Invokes| B2
+        B2 -.->|Generates Determination| B1
+        B1 -->|Formatted Data<br/>(Generated & Ground Truth)| B3
+        B3 -->|Metrics| B4
     end
     
-    B2_AutoPAD --> B2_AutoPAD_Internals;
-    
-    subgraph AzureAIServicesStack["Azure AI & Supporting Services"]
-        AOAI["Azure OpenAI Service \n LLMs for summarization & determination"];
-        AIFoundry["Azure AI Foundry \n Project Config, Telemetry, Evaluation Logging"];
-        CustomEvals["Custom Evaluators \n RAGAS, Transformers, RapidFuzz, etc."];
+    subgraph AgentLogic ["🧠 AutoPADeterminator Agent Logic"]
+        direction TB
+        C1["📥 Input: Case Data + Policy Text"]
+        C2["📝 Policy Summarization<br/>(LLM Call via AzureOpenAIManager)<br/>(if policy is too long)"]
+        C3["🔧 Prompt Engineering<br/>(Jinja Templates)<br/>prior_auth_user_prompt<br/>prior_auth_system_prompt"]
+        C4["🤖 LLM Call for PA Determination<br/>(AzureOpenAIManager with GPT-4o/O1)"]
+        C5["📄 Raw LLM Determination Text"]
+        C6["🏗️ Determination Structuring<br/>(LLM Call via AzureOpenAIManager<br/>with summarize_autodetermination prompts)"]
+        C7["📊 Final Structured Determination<br/>(JSON-like String)"]
+        
+        C1 --> C2
+        C1 --> C3
+        C2 --> C3
+        C3 --> C4
+        C4 --> C5
+        C5 --> C6
+        C6 --> C7
     end
     
-    B2_AutoPAD -- Uses --> AOAI;
-    B3_RunEval -- Leverages --> AIFoundry;
-    B3_RunEval -- Utilizes --> CustomEvals;
+    subgraph AzureStack ["☁️ Azure AI & Supporting Services"]
+        direction TB
+        D1["🧠 Azure OpenAI Service<br/>(LLMs for summarization & determination)"]
+        D2["🏭 Azure AI Foundry<br/>(Project Config, Telemetry, Evaluation Logging)"]
+        D3["⚙️ Custom Evaluators<br/>(RAGAS, Transformers, RapidFuzz, etc.)"]
+    end
     
-    B4_PostProcess --> C["Evaluation Summary Report JSON"];
+    E["📊 Evaluation Summary Report (JSON)"]
+    
+    %% Main flow connections
+    A --> AutoPAD
+    B2 --> AgentLogic
+    B2 -.->|Uses| D1
+    B3 -.->|Leverages| D2
+    B3 -.->|Utilizes| D3
+    B4 --> E
     
     %% Styling
-    style B fill:#e6f3ff,stroke:#333,stroke-width:2px;
-    style B2_AutoPAD_Internals fill:#f0fff0,stroke:#333,stroke-width:2px;
-    style AzureAIServicesStack fill:#fff0e6,stroke:#333,stroke-width:2px;
+    classDef inputNode fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#000
+    classDef processNode fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef agentNode fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef azureNode fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef outputNode fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
+    
+    class A inputNode
+    class B1,B3,B4 processNode
+    class B2,C1,C2,C3,C4,C5,C6,C7 agentNode
+    class D1,D2,D3 azureNode
+    class E outputNode
+    
+    %% Subgraph styling
+    style AutoPAD fill:#f8f9fa,stroke:#495057,stroke-width:2px
+    style AgentLogic fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    style AzureStack fill:#fff8e1,stroke:#f57c00,stroke-width:2px
 ```
 
 **Workflow Explanation:**
