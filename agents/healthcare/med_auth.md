@@ -78,41 +78,41 @@ This entire process is designed to rigorously test and validate AI-driven prior 
 
 ```mermaid
 graph TD
-    A["Test Case Data (YAML) \n - Patient Info \n - Physician Info \n - Clinical Info \n - Policy Text \n - Ground Truth Determination"] --> B{AutoDeterminationEvaluator};
-
+    A["Test Case Data YAML \n • Patient Info \n • Physician Info \n • Clinical Info \n • Policy Text \n • Ground Truth Determination"] --> B{AutoDeterminationEvaluator};
+    
     subgraph B["AutoDeterminationEvaluator Pipeline"]
         direction LR
-        B1_PreProcess["1. Preprocess & Run Determination \n (For each test case)"] -- Invokes --> B2_AutoPAD["AutoPADeterminator Agent"];
+        B1_PreProcess["1. Preprocess & Run Determination \n For each test case"] -- Invokes --> B2_AutoPAD["AutoPADeterminator Agent"];
         B2_AutoPAD -- Generates Determination --> B1_PreProcess;
-        B1_PreProcess -- Formatted Data (Generated & Ground Truth) --> B3_RunEval["2. Run Azure AI Evaluation"];
+        B1_PreProcess -- Formatted Data Generated & Ground Truth --> B3_RunEval["2. Run Azure AI Evaluation"];
         B3_RunEval -- Metrics --> B4_PostProcess["3. Postprocess Results"];
     end
     
     subgraph B2_AutoPAD_Internals["AutoPADeterminator Agent Logic"]
         direction TB
-        B2_1_Input["Input: Case Data + Policy Text"] --> B2_2_PolicySum["Policy Summarization \n (LLM Call via AzureOpenAIManager) \n (if policy is too long)"];
-        B2_2_PolicySum --> B2_3_PromptEng["Prompt Engineering \n (Jinja: prior_auth_user_prompt, prior_auth_system_prompt)"];
+        B2_1_Input["Input: Case Data + Policy Text"] --> B2_2_PolicySum["Policy Summarization \n LLM Call via AzureOpenAIManager \n if policy is too long"];
+        B2_2_PolicySum --> B2_3_PromptEng["Prompt Engineering \n Jinja: prior_auth_user_prompt, prior_auth_system_prompt"];
         B2_1_Input --> B2_3_PromptEng;
-        B2_3_PromptEng --> B2_4_LLMCall["LLM Call for PA Determination \n (AzureOpenAIManager with GPT-4o/O1)"];
-        B2_4_LLMCall --> B2_5_RawOutput["Raw LLM Determination (Text)"];
-        B2_5_RawOutput --> B2_6_OutputStructuring["Determination Structuring \n (LLM Call via AzureOpenAIManager with summarize_autodetermination prompts)"]
-        B2_6_OutputStructuring --> B2_7_FinalDetermination["Final Structured Determination (JSON-like String)"]
+        B2_3_PromptEng --> B2_4_LLMCall["LLM Call for PA Determination \n AzureOpenAIManager with GPT-4o/O1"];
+        B2_4_LLMCall --> B2_5_RawOutput["Raw LLM Determination Text"];
+        B2_5_RawOutput --> B2_6_OutputStructuring["Determination Structuring \n LLM Call via AzureOpenAIManager with summarize_autodetermination prompts"]
+        B2_6_OutputStructuring --> B2_7_FinalDetermination["Final Structured Determination JSON-like String"]
     end
-
+    
     B2_AutoPAD --> B2_AutoPAD_Internals;
-
+    
     subgraph AzureAIServicesStack["Azure AI & Supporting Services"]
-        AOAI["Azure OpenAI Service (LLMs for summarization & determination)"];
-        AIFoundry["Azure AI Foundry (Project Config, Telemetry, Evaluation Logging)"];
-        CustomEvals["Custom Evaluators (RAGAS, Transformers, RapidFuzz, etc.)"];
+        AOAI["Azure OpenAI Service \n LLMs for summarization & determination"];
+        AIFoundry["Azure AI Foundry \n Project Config, Telemetry, Evaluation Logging"];
+        CustomEvals["Custom Evaluators \n RAGAS, Transformers, RapidFuzz, etc."];
     end
-
+    
     B2_AutoPAD -- Uses --> AOAI;
     B3_RunEval -- Leverages --> AIFoundry;
     B3_RunEval -- Utilizes --> CustomEvals;
     
-    B4_PostProcess --> C["Evaluation Summary Report (JSON)"];
-
+    B4_PostProcess --> C["Evaluation Summary Report JSON"];
+    
     %% Styling
     style B fill:#e6f3ff,stroke:#333,stroke-width:2px;
     style B2_AutoPAD_Internals fill:#f0fff0,stroke:#333,stroke-width:2px;
