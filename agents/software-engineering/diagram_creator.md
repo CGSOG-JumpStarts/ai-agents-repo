@@ -44,6 +44,7 @@ This is a Next.js web application that generates various types of diagrams using
 ## Architecture Design
 
 ```mermaid
+
 graph TD
     User[User] -->|1. Select diagram type & description| Frontend[React Frontend]
     
