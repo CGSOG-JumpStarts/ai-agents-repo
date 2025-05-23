@@ -286,7 +286,8 @@ graph TD
     PatchedOrDecoratedCode -- Original Call --> LangChainCore
     
     SystemMonitorUtil -- Monitors --> HostSystem
-    FileHandling -- Reads --> UserApplication # To get source code
+    %% FileHandling reads UserApplication to get source code
+    FileHandling -- Reads --> UserApplication
     
     AsyncUploader -- Uploads Data --> RagaPlatform
     
