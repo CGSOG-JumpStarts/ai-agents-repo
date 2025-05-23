@@ -128,30 +128,30 @@ graph TD
         direction LR
         SkillSet[SkillSet: Linear or Parallel]
         RuntimeMgr[Runtime Manager]
-        Memory[Memory (Optional, e.g., VectorDB)]
-        TeacherRuntime[Teacher Runtime (for learning)]
+        Memory[Memory - Optional e.g. VectorDB]
+        TeacherRuntime[Teacher Runtime - for learning]
     end
 
     AdalaAgent -- Uses --> SkillSet
-    SkillSet -- Contains --> Skill1[Skill 1 (e.g., Classification)]
-    SkillSet -- Contains --> SkillN[Skill N (e.g., RAG)]
+    SkillSet -- Contains --> Skill1[Skill 1 - e.g. Classification]
+    SkillSet -- Contains --> SkillN[Skill N - e.g. RAG]
 
     Skill1 -- Needs --> RuntimeMgr
     SkillN -- Needs --> RuntimeMgr
-    RuntimeMgr -- Selects/Provides --> Runtime[LLM Runtime (e.g., OpenAI, LiteLLM)]
-    Runtime -- Interacts with --> LLMAPI[LLM API (OpenAI, Anthropic, VertexAI, etc.)]
+    RuntimeMgr -- Selects/Provides --> Runtime[LLM Runtime - e.g. OpenAI, LiteLLM]
+    Runtime -- Interacts with --> LLMAPI[LLM API - OpenAI, Anthropic, VertexAI, etc.]
 
     AdalaAgent -- Interacts with --> Environment[Environment]
 
-    subgraph Environment["Environment (Data & Feedback Source)"]
+    subgraph Environment["Environment - Data & Feedback Source"]
         direction TB
-        DataSource[Data Source (DataFrame, Kafka, API, Console)]
-        GroundTruth[Ground Truth Data (Optional)]
+        DataSource[Data Source - DataFrame, Kafka, API, Console]
+        GroundTruth[Ground Truth Data - Optional]
         FeedbackLogic[Feedback Logic]
     end
 
     DataSource -->|Data Batch| AdalaAgent
-    AdalaAgent -- Applies Skills to Data --> Predictions[Predictions (InternalDataFrame)]
+    AdalaAgent -- Applies Skills to Data --> Predictions[Predictions - InternalDataFrame]
     Predictions --> FeedbackLogic
     GroundTruth --> FeedbackLogic
     FeedbackLogic -->|Feedback Signal| AdalaAgent
@@ -166,10 +166,10 @@ graph TD
 
     %% Specific Environment Examples
     subgraph EnvironmentTypes["Example Environments"]
-        StaticEnv[Static Environment (DataFrame)]
-        KafkaEnv[AsyncKafkaEnvironment (Streaming)]
-        WebEnv[Web Environment (Discord, API)]
-        ConsoleEnv[Console Environment (Human Feedback)]
+        StaticEnv[Static Environment - DataFrame]
+        KafkaEnv[AsyncKafkaEnvironment - Streaming]
+        WebEnv[Web Environment - Discord, API]
+        ConsoleEnv[Console Environment - Human Feedback]
     end
     Environment -.-> EnvironmentTypes
 
@@ -189,7 +189,7 @@ graph TD
     end
     Skill1 -.-> SkillExamples
     SkillN -.-> SkillExamples
-
+    SkillN -.-> SkillExamples
 ```
 
 The Adala framework revolves around an **Adala Agent**, which is configured by a user or developer. This agent is equipped with a **SkillSet** (a collection of one or more **Skills**), a **Runtime Manager** to interface with Large Language Models (LLMs), an optional **Memory** component, and interacts with an **Environment**.
