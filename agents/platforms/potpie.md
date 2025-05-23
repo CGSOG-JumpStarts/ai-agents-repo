@@ -121,7 +121,6 @@ Potpie is an AI-powered developer platform designed to understand and interact w
 ## Architecture Design
 
 ```mermaid
-```mermaid
 graph TD
     User[User - Web UI/VSCode/API] -->|Requests| API[FastAPI Service]
 
