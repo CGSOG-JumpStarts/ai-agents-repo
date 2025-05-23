@@ -125,7 +125,7 @@ graph TD
     User[User/Developer] -- Configures --> AdalaAgent[Adala Agent]
 
     subgraph AdalaAgent["Adala Agent"]
-        Direction LR
+        direction LR
         SkillSet[SkillSet: Linear or Parallel]
         RuntimeMgr[Runtime Manager]
         Memory[Memory (Optional, e.g., VectorDB)]
@@ -144,7 +144,7 @@ graph TD
     AdalaAgent -- Interacts with --> Environment[Environment]
 
     subgraph Environment["Environment (Data & Feedback Source)"]
-        Direction TB
+        direction TB
         DataSource[Data Source (DataFrame, Kafka, API, Console)]
         GroundTruth[Ground Truth Data (Optional)]
         FeedbackLogic[Feedback Logic]
