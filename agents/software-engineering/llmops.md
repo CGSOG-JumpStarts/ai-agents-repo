@@ -79,7 +79,6 @@ This framework automates the red teaming process for AI agents to identify vulne
 -   **Tool Used**: `ragaai_catalyst.Dataset` for interacting with the RagaAI platform.
 
 ## Architecture Design
-
 ```mermaid
 graph TD
     User[User] -->|Agent Desc, Detectors, Response Model Func, Test Config| RTOrchestrator[RedTeaming Orchestrator]
@@ -93,10 +92,10 @@ graph TD
         UploadUtil[UploadResult Utility]
     end
 
-    AgentUnderTest[Agent Under Test (Provided by User)]
-    LLMAPIs["LLM APIs (OpenAI, XAI, LiteLLM)"]
+    AgentUnderTest[Agent Under Test - Provided by User]
+    LLMAPIs["LLM APIs - OpenAI, XAI, LiteLLM"]
     RagaPlatform["RagaAI Catalyst Platform"]
-    LocalFS["Local Filesystem (CSV Report)"]
+    LocalFS["Local Filesystem - CSV Report"]
 
     RTOrchestrator -->|Agent Desc, Detector Category| ScenarioGen
     ScenarioGen -->|Prompts| LLMGenTool
@@ -118,14 +117,13 @@ graph TD
     RTOrchestrator -->|Agent Desc, Conversation, Scenario| EvalAgent
     EvalAgent -->|Prompts| LLMGenTool
     LLMGenTool -->|API Call| LLMAPIs
-    LLMAPIs -->|Evaluation JSON (Pass/Fail, Reason)| LLMGenTool
+    LLMAPIs -->|Evaluation JSON - Pass/Fail, Reason| LLMGenTool
     LLMGenTool -->|Parsed Evaluation| EvalAgent
     EvalAgent -->|Evaluation Outcome| RTOrchestrator
 
     RTOrchestrator -->|Save Report| LocalFS
-    RTOrchestrator -->|Upload Report (Optional)| UploadUtil
+    RTOrchestrator -->|Upload Report - Optional| UploadUtil
     UploadUtil -->|API Call| RagaPlatform
-
 ```
 
 # 2. Agentic Tracing Framework
