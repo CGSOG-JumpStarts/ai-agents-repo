@@ -82,26 +82,26 @@ graph TD
     
     subgraph AutoPAD ["🤖 AutoDeterminationEvaluator Pipeline"]
         direction TB
-        B1["1️⃣ Preprocess & Run Determination<br/>(For each test case)"] 
+        B1["1️⃣ Preprocess & Run Determination<br/>For each test case"] 
         B2["AutoPADeterminator Agent"]
         B3["2️⃣ Run Azure AI Evaluation"]
         B4["3️⃣ Postprocess Results"]
         
         B1 -.->|Invokes| B2
         B2 -.->|Generates Determination| B1
-        B1 -->|Formatted Data<br/>(Generated & Ground Truth)| B3
+        B1 -->|Formatted Data| B3
         B3 -->|Metrics| B4
     end
     
     subgraph AgentLogic ["🧠 AutoPADeterminator Agent Logic"]
         direction TB
         C1["📥 Input: Case Data + Policy Text"]
-        C2["📝 Policy Summarization<br/>(LLM Call via AzureOpenAIManager)<br/>(if policy is too long)"]
-        C3["🔧 Prompt Engineering<br/>(Jinja Templates)<br/>prior_auth_user_prompt<br/>prior_auth_system_prompt"]
-        C4["🤖 LLM Call for PA Determination<br/>(AzureOpenAIManager with GPT-4o/O1)"]
+        C2["📝 Policy Summarization<br/>LLM Call via AzureOpenAIManager<br/>if policy is too long"]
+        C3["🔧 Prompt Engineering<br/>Jinja Templates<br/>prior_auth_user_prompt<br/>prior_auth_system_prompt"]
+        C4["🤖 LLM Call for PA Determination<br/>AzureOpenAIManager with GPT-4o/O1"]
         C5["📄 Raw LLM Determination Text"]
-        C6["🏗️ Determination Structuring<br/>(LLM Call via AzureOpenAIManager<br/>with summarize_autodetermination prompts)"]
-        C7["📊 Final Structured Determination<br/>(JSON-like String)"]
+        C6["🏗️ Determination Structuring<br/>LLM Call via AzureOpenAIManager<br/>with summarize_autodetermination prompts"]
+        C7["📊 Final Structured Determination<br/>JSON-like String"]
         
         C1 --> C2
         C1 --> C3
@@ -114,12 +114,12 @@ graph TD
     
     subgraph AzureStack ["☁️ Azure AI & Supporting Services"]
         direction TB
-        D1["🧠 Azure OpenAI Service<br/>(LLMs for summarization & determination)"]
-        D2["🏭 Azure AI Foundry<br/>(Project Config, Telemetry, Evaluation Logging)"]
-        D3["⚙️ Custom Evaluators<br/>(RAGAS, Transformers, RapidFuzz, etc.)"]
+        D1["🧠 Azure OpenAI Service<br/>LLMs for summarization & determination"]
+        D2["🏭 Azure AI Foundry<br/>Project Config, Telemetry, Evaluation Logging"]
+        D3["⚙️ Custom Evaluators<br/>RAGAS, Transformers, RapidFuzz, etc."]
     end
     
-    E["📊 Evaluation Summary Report (JSON)"]
+    E["📊 Evaluation Summary Report - JSON"]
     
     %% Main flow connections
     A --> AutoPAD
